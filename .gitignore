@@ -38,3 +38,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+#### Multi ###
+todo-app-backend/
+todo-app-backend/*
+todo-app-backend/.mvn
