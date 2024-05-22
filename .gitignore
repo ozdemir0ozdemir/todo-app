@@ -40,6 +40,4 @@ build/
 .DS_Store
 
 #### Multi ###
-todo-app-backend/
-todo-app-backend/*
 todo-app-backend/.mvn

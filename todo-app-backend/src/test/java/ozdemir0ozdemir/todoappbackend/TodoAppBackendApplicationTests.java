@@ -1,4 +1,4 @@
-package ozdemir0zdemir.todoappbackend;
+package ozdemir0ozdemir.todoappbackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
