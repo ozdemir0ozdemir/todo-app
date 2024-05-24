@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public final class ErrorResponse {
 
     private LocalDateTime timestamp;
@@ -21,9 +21,9 @@ public final class ErrorResponse {
     private String path;
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
     public static final class ErrorItem{
         String message;
         String help;

@@ -1,13 +1,22 @@
 package ozdemir0ozdemir.todoappbackend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ozdemir0ozdemir.todoappbackend.dto.CreateNewTaskRequest;
+import ozdemir0ozdemir.todoappbackend.dto.TaskResponse;
 import ozdemir0ozdemir.todoappbackend.dto.UpdateTaskCompletionRequest;
 import ozdemir0ozdemir.todoappbackend.dto.UpdateTaskRequest;
+import ozdemir0ozdemir.todoappbackend.exception.TaskNotFoundException;
 import ozdemir0ozdemir.todoappbackend.model.Task;
 import ozdemir0ozdemir.todoappbackend.repository.TaskRepository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,84 +25,91 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final String taskNotFoundString = "Task with id %d is not found!";
 
-    public Task saveNewTask(CreateNewTaskRequest request) {
+    public List<TaskResponse.TaskDto> saveNewTask(CreateNewTaskRequest request) {
 
         Task task = Task.builder()
                 .title(request.getTitle())
                 .completed(Boolean.FALSE)
                 .build();
 
-        return this.taskRepository.save(task);
+        Task savedTask = this.taskRepository.save(task);
+
+        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
+        tasks.add(TaskResponse.TaskDto.from(savedTask));
+
+        return tasks;
     }
 
-    public List<Task> findAllTasks() {
+    public Page<TaskResponse.TaskDto> findAllTasks(int pageNumber, int pageSize) {
 
-        return this.taskRepository.findAll();
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Task> tasks = this.taskRepository.findAll(pageRequest);
+
+        return tasks.map(TaskResponse.TaskDto::from);
     }
 
-    public Task findTaskById(Long taskId) {
+    public List<TaskResponse.TaskDto> findTaskById(Long taskId) {
 
-        // TODO: Error handling for the non-existence of the task with taskId
-        return this.taskRepository.findById(taskId).get();
+        Task task = this.taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+
+        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
+        tasks.add(TaskResponse.TaskDto.from(task));
+
+        return tasks;
     }
 
-    public Task updateTaskById(UpdateTaskRequest request, Long taskId) {
+    public List<TaskResponse.TaskDto> updateTaskById(UpdateTaskRequest request, Long taskId) {
 
-        // TODO: Error handling for the non-existence of the task with taskId
-        boolean isTaskExists = this.taskRepository.findById(taskId).isPresent();
-        if(isTaskExists){
-            Task task = Task.builder()
-                    .id(taskId)
-                    .title(request.getTitle())
-                    .completed(request.getCompleted())
-                    .build();
-            this.taskRepository.save(task);
-            return task;
-        }
-        return Task.builder()
-                .id(-999L)
-                .title("Task is not exists")
-                .completed(Boolean.FALSE)
+        Task task = this.taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+
+        Task updatedTask = Task.builder()
+                .id(task.getId())
+                .title(request.getTitle())
+                .completed(request.getCompleted())
                 .build();
+
+        this.taskRepository.saveAndFlush(updatedTask);
+
+        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
+        tasks.add(TaskResponse.TaskDto.from(updatedTask));
+
+        return tasks;
     }
 
-    public Task updateTaskCompletionById(UpdateTaskCompletionRequest request, Long taskId) {
+    public List<TaskResponse.TaskDto> updateTaskCompletionById(UpdateTaskCompletionRequest request, Long taskId) {
 
-        // TODO: Error handling for the non-existence of the task with taskId
-        Optional<Task> optionalTask = this.taskRepository.findById(taskId);
-        if(optionalTask.isPresent()){
-            Task task = Task.builder()
-                    .id(taskId)
-                    .title(optionalTask.get().getTitle())
-                    .completed(request.getCompleted())
-                    .build();
-            this.taskRepository.save(task);
-            return task;
-        }
-        return Task.builder()
-                .id(-999L)
-                .title("Task is not exists")
-                .completed(Boolean.FALSE)
+        Task task = this.taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+
+        Task updatedTask = Task.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .completed(request.getCompleted())
                 .build();
+
+        this.taskRepository.saveAndFlush(updatedTask);
+
+        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
+        tasks.add(TaskResponse.TaskDto.from(updatedTask));
+
+        return tasks;
     }
 
-    public Task deleteTaskById(Long taskId) {
+    public List<TaskResponse.TaskDto> deleteTaskById(Long taskId) {
 
-        // TODO: Error handling for the non-existence of the task with taskId
-        Optional<Task> optionalTask = this.taskRepository.findById(taskId);
-        if(optionalTask.isPresent()){
-            this.taskRepository.deleteById(taskId);
-            return Task.builder()
-                    .id(taskId)
-                    .title(optionalTask.get().getTitle())
-                    .completed(optionalTask.get().getCompleted())
-                    .build();
-        }
-        return Task.builder()
-                .id(-999L)
-                .title("Task is not exists")
-                .completed(Boolean.FALSE)
-                .build();
+        Task task = this.taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+
+        this.taskRepository.deleteById(task.getId());
+
+        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
+        tasks.add(TaskResponse.TaskDto.from(task));
+
+        return tasks;
     }
+
 }

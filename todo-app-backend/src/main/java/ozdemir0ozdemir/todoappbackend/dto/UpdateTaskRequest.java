@@ -16,6 +16,5 @@ public final class UpdateTaskRequest {
     private String title;
 
     @NotNull
-    @Pattern(regexp = "^true$|^false$", message = "Completed param must be true or false")
     private Boolean completed;
 }

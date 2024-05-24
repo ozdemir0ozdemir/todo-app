@@ -3,11 +3,31 @@ POST http://localhost:8080/tasks
 Content-Type: application/json
 
 {
-  "title": ""
+  "title": "D"
 }
 
 ### Get All Tasks
-GET http://localhost:8080/tasks
+GET http://localhost:8080/tasks?pageNumber=6&pageSize=5
 
 ### Get a Task by Id
-GET http://localhost:8080/tasks/-1
+GET http://localhost:8080/tasks/1
+
+### Update a Task using UpdateTaskRequest as the body
+PUT http://localhost:8080/tasks/1
+Content-Type: application/json
+
+{
+  "title": "Deneme Task'ı Yaptım ve PUT kullandım",
+  "completed": true
+}
+
+### Patch a task's completed value usin UpdateTaskCompletionRequest as the body
+PATCH http://localhost:8080/tasks/1
+Content-Type: application/json
+
+{
+  "completed": false
+}
+
+### Delete a task by id
+DELETE http://localhost:8080/tasks/1

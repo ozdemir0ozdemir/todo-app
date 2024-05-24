@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ozdemir0ozdemir.todoappbackend.dto.ErrorResponse;
 
 import java.time.LocalDateTime;
@@ -16,15 +17,21 @@ import java.util.Collection;
 @RestControllerAdvice
 public class TaskExceptionHandler {
 
+    private final String mismatchArgumentString = "%s's value is invalid. Please provide proper value!";
+
     /**
      * Jakarta @Valid
      * Field level validation global handler
+     *
+     * @param ex      MethodArgumentNotValidException
+     * @param request HttpServletRequest
+     * @see MethodArgumentNotValidException
+     * @see HttpServletRequest
      * @author Özdemir Özdemir
-     * @param ex MethodArgumentNotValidException (@see MethodArgumentNotValidException)
-     * @param request HttpServletRequest (@see HttpServletRequest)
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex,
+                                                          HttpServletRequest request) {
 
         Collection<ErrorResponse.ErrorItem> errorItems = new ArrayList<>();
 
@@ -32,8 +39,7 @@ public class TaskExceptionHandler {
             errorItems.add(
                     ErrorResponse.ErrorItem.builder()
                             .message(error.getDefaultMessage())
-                            // FIXME: Find proper way to include api address
-                            .help("https://localhost:8080" + request.getRequestURI() + "/help")
+                            .help(request.getRequestURL() + "/help")
                             .build()
             );
         });
@@ -51,21 +57,25 @@ public class TaskExceptionHandler {
     /**
      * Spring @Validated on controller
      * Method argument level global handler
+     *
+     * @param ex      ConstraintViolationException
+     * @param request HttpServletRequest
+     * @see ConstraintViolationException
+     * @see HttpServletRequest
      * @author Özdemir Özdemir
-     * @param ex ConstraintViolationException (@see ConstraintViolationException)
-     * @param request HttpServletRequest (@see HttpServletRequest)
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(ConstraintViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidation(ConstraintViolationException ex,
+                                                          HttpServletRequest request) {
+
         Collection<ErrorResponse.ErrorItem> errorItems = new ArrayList<>();
 
         ex.getConstraintViolations().forEach((violation) -> {
             errorItems.add(
                     ErrorResponse.ErrorItem.builder()
                             .message(violation.getMessage())
-                            // FIXME: Find proper way to include api address
                             // FIXME: Omit path variable
-                            .help("https://localhost:8080" + request.getRequestURI() + "/help")
+                            .help(request.getRequestURL() + "/help")
                             .build()
             );
         });
@@ -78,5 +88,69 @@ public class TaskExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(response);
+    }
+
+    /**
+     * Exception handler for TaskNotFoundException
+     * @param ex TaskNotFoundException is the exception
+     * @param request HttpServletRequest is the main request
+     * @see TaskNotFoundException
+     * @see HttpServletRequest
+     * @author Özdemir Özdemir
+     * */
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTaskNotFound(TaskNotFoundException ex,
+                                                            HttpServletRequest request) {
+
+        Collection<ErrorResponse.ErrorItem> errorItems = new ArrayList<>();
+
+        errorItems.add(
+                ErrorResponse.ErrorItem.builder()
+                        .message(ex.getMessage())
+                        // FIXME: Omit path variable
+                        .help(request.getRequestURL() + "/help")
+                        .build()
+        );
+
+        ErrorResponse response = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .errors(errorItems)
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(response);
+    }
+
+    /**
+     * Exception handler for MethodArgumentTypeMismatchException
+     * @param ex MethodArgumentTypeMismatchException is the exception
+     * @param request HttpServletRequest is the main request
+     * @see MethodArgumentTypeMismatchException
+     * @see HttpServletRequest
+     * @author Özdemir Özdemir
+     * */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                                          HttpServletRequest request) {
+
+        Collection<ErrorResponse.ErrorItem> errorItems = new ArrayList<>();
+
+        errorItems.add(
+                ErrorResponse.ErrorItem.builder()
+                        .message(String.format(mismatchArgumentString, ex.getName()))
+                        // FIXME: Omit path variable
+                        .help(request.getRequestURL() + "/help")
+                        .build()
+        );
+
+        ErrorResponse response = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST)
+                .errors(errorItems)
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(response);
     }
 }
