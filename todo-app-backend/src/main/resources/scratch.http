@@ -1,16 +1,18 @@
 ### Create New Task
 POST http://localhost:8080/tasks
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNjY1NjUyNiwiZXhwIjoxNzE2NjU3NzI2fQ.gwCKeI14E8NIFYtYJ_IETujZ2n8X4xRJCSev273hQao
 
 {
-  "title": "D"
+  "title": "Bu bir yapılacak maddesidir!"
 }
 
 ### Get All Tasks
-GET http://localhost:8080/tasks?pageNumber=6&pageSize=5
+GET http://localhost:8080/tasks?pageNumber=0&pageSize=5
 
 ### Get a Task by Id
 GET http://localhost:8080/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNjY1NjUyNiwiZXhwIjoxNzE2NjU3NzI2fQ.gwCKeI14E8NIFYtYJ_IETujZ2n8X4xRJCSev273hQao
 
 ### Update a Task using UpdateTaskRequest as the body
 PUT http://localhost:8080/tasks/1
@@ -30,4 +32,13 @@ Content-Type: application/json
 }
 
 ### Delete a task by id
-DELETE http://localhost:8080/tasks/1
+DELETE http://localhost:8080/tasks/5
+
+### Authenticate
+POST http://localhost:8080/authentication
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password"
+}

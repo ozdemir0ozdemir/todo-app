@@ -34,12 +34,8 @@ public class TaskService {
                 .completed(Boolean.FALSE)
                 .build();
 
-        Task savedTask = this.taskRepository.save(task);
-
-        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
-        tasks.add(TaskResponse.TaskDto.from(savedTask));
-
-        return tasks;
+        this.taskRepository.saveAndFlush(task);
+        return toTaskDtoList(task);
     }
 
     public Page<TaskResponse.TaskDto> findAllTasks(int pageNumber, int pageSize) {
@@ -52,64 +48,47 @@ public class TaskService {
 
     public List<TaskResponse.TaskDto> findTaskById(Long taskId) {
 
-        Task task = this.taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
-
-        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
-        tasks.add(TaskResponse.TaskDto.from(task));
-
-        return tasks;
+        Task task = getTaskIfExists(taskId);
+        return toTaskDtoList(task);
     }
 
     public List<TaskResponse.TaskDto> updateTaskById(UpdateTaskRequest request, Long taskId) {
 
-        Task task = this.taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+        Task task = getTaskIfExists(taskId);
+        task.setTitle(request.getTitle());
+        task.setCompleted(request.getCompleted());
 
-        Task updatedTask = Task.builder()
-                .id(task.getId())
-                .title(request.getTitle())
-                .completed(request.getCompleted())
-                .build();
-
-        this.taskRepository.saveAndFlush(updatedTask);
-
-        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
-        tasks.add(TaskResponse.TaskDto.from(updatedTask));
-
-        return tasks;
+        this.taskRepository.saveAndFlush(task);
+        return toTaskDtoList(task);
     }
 
     public List<TaskResponse.TaskDto> updateTaskCompletionById(UpdateTaskCompletionRequest request, Long taskId) {
 
-        Task task = this.taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+        Task task = getTaskIfExists(taskId);
+        task.setCompleted(request.getCompleted());
 
-        Task updatedTask = Task.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .completed(request.getCompleted())
-                .build();
-
-        this.taskRepository.saveAndFlush(updatedTask);
-
-        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
-        tasks.add(TaskResponse.TaskDto.from(updatedTask));
-
-        return tasks;
+        this.taskRepository.saveAndFlush(task);
+        return toTaskDtoList(task);
     }
 
     public List<TaskResponse.TaskDto> deleteTaskById(Long taskId) {
 
-        Task task = this.taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
+        Task task = getTaskIfExists(taskId);
 
         this.taskRepository.deleteById(task.getId());
+        return toTaskDtoList(task);
+    }
+
+    private List<TaskResponse.TaskDto> toTaskDtoList(Task task) {
 
         List<TaskResponse.TaskDto> tasks = new ArrayList<>();
         tasks.add(TaskResponse.TaskDto.from(task));
-
         return tasks;
+    }
+
+    private Task getTaskIfExists(Long taskId) {
+        return this.taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String.format(taskNotFoundString, taskId)));
     }
 
 }

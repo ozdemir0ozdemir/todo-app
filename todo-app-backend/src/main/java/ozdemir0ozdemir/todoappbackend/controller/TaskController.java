@@ -3,6 +3,7 @@ package ozdemir0ozdemir.todoappbackend.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class TaskController {
 
     private final TaskService taskService;
@@ -29,6 +31,7 @@ public class TaskController {
                                                     @RequestBody CreateNewTaskRequest request
     ) {
 
+        log.info("START :: Save new task requested");
         List<TaskResponse.TaskDto> tasks = this.taskService.saveNewTask(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -37,14 +40,18 @@ public class TaskController {
                 .toUri();
 
         TaskResponse response = createResponse(HttpStatus.FOUND, tasks, location.getPath());
+        log.info("END :: Save new task requested");
         return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<TaskPageResponse> findAllTasks(@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
-                                                     @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+    public ResponseEntity<TaskPageResponse> findAllTasks(@Min(value = 0, message = "Page Number cannot be negative!")
+                                                         @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+                                                         @Min(value = 0, message = "Page Size cannot be negative!")
+                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
     ) {
 
+        log.info("START :: Find all tasks requested");
         Page<TaskResponse.TaskDto> tasks = this.taskService.findAllTasks(pageNumber, pageSize);
 
         TaskResponse response = createResponse(HttpStatus.FOUND, tasks.stream().toList(), this.getPath());
@@ -55,56 +62,67 @@ public class TaskController {
                 .totalPage(tasks.getTotalPages())
                 .build();
 
+        log.info("END :: Find all tasks requested");
         return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
+
     }
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<TaskResponse> findTaskById(@Min(value = 1, message = "Task id cannot be negative")
+    public ResponseEntity<TaskResponse> findTaskById(@Min(value = 1, message = "Task id cannot be negative!")
                                                      @PathVariable("taskId") Long taskId
     ) {
 
+        log.info("START :: Find task by id requested");
         List<TaskResponse.TaskDto> task = this.taskService.findTaskById(taskId);
 
         TaskResponse response = createResponse(HttpStatus.FOUND, task, this.getPath());
+        log.info("END :: Find task by id requested");
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponse> updateTaskById(@Valid
                                                        @RequestBody UpdateTaskRequest request,
-                                                       @Min(value = 1, message = "Task id cannot be negative")
+                                                       @Min(value = 1, message = "Task id cannot be negative!")
                                                        @PathVariable("taskId") Long taskId
     ) {
 
+        log.info("START :: Update task by id requested");
         List<TaskResponse.TaskDto> task = this.taskService.updateTaskById(request, taskId);
 
         TaskResponse response = createResponse(HttpStatus.OK, task, this.getPath());
+        log.info("END :: Update task by id requested");
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{taskId}")
     public ResponseEntity<TaskResponse> updateTaskCompletionById(@Valid
                                                                  @RequestBody UpdateTaskCompletionRequest request,
-                                                                 @Min(value = 1, message = "Task id cannot be negative")
+                                                                 @Min(value = 1, message = "Task id cannot be negative!")
                                                                  @PathVariable("taskId") Long taskId
     ) {
 
+        log.info("START :: Update task completion by id requested");
         List<TaskResponse.TaskDto> task = this.taskService.updateTaskCompletionById(request, taskId);
 
         TaskResponse response = createResponse(HttpStatus.OK, task, this.getPath());
+        log.info("END :: Update task completion by id requested");
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<TaskResponse> deleteTaskById(@Min(value = 1, message = "Task id cannot be negative")
+    public ResponseEntity<TaskResponse> deleteTaskById(@Min(value = 1, message = "Task id cannot be negative!")
                                                        @PathVariable("taskId") Long taskId
     ) {
 
+        log.info("START :: Delete task by id requested");
         List<TaskResponse.TaskDto> task = this.taskService.deleteTaskById(taskId);
 
         TaskResponse response = createResponse(HttpStatus.OK, task, this.getPath());
+        log.info("END :: Delete task by id requested");
         return ResponseEntity.ok(response);
     }
+
 
     /**
      * @return the path request was made

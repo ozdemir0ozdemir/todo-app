@@ -7,6 +7,7 @@ This is a simple RESTful API for a To-Do application backend. It provides endpoi
 - Spring Boot
 - Lombok
 - Jakarta Validation API
+- H2 Database
 
 ## API Endpoints
 
