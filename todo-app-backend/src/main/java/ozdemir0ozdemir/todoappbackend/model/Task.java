@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ozdemir0ozdemir.todoappbackend.dto.TaskResponse;
 
 @Data
 @AllArgsConstructor
@@ -27,4 +28,12 @@ public final class Task {
 
     @NotNull
     private Boolean completed;
+
+    public static Task from(TaskResponse.TaskDto taskDto) {
+        return Task.builder()
+                .id(taskDto.getId())
+                .title(taskDto.getTitle())
+                .completed(taskDto.getCompleted())
+                .build();
+    }
 }

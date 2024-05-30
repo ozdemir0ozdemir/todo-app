@@ -35,7 +35,7 @@ public class TaskService {
                 .build();
 
         this.taskRepository.saveAndFlush(task);
-        return toTaskDtoList(task);
+        return List.of(TaskResponse.TaskDto.from(task));
     }
 
     public Page<TaskResponse.TaskDto> findAllTasks(int pageNumber, int pageSize) {
@@ -49,26 +49,29 @@ public class TaskService {
     public List<TaskResponse.TaskDto> findTaskById(Long taskId) {
 
         Task task = getTaskIfExists(taskId);
-        return toTaskDtoList(task);
+
+        return List.of(TaskResponse.TaskDto.from(task));
     }
 
     public List<TaskResponse.TaskDto> updateTaskById(UpdateTaskRequest request, Long taskId) {
 
         Task task = getTaskIfExists(taskId);
+
         task.setTitle(request.getTitle());
         task.setCompleted(request.getCompleted());
 
         this.taskRepository.saveAndFlush(task);
-        return toTaskDtoList(task);
+        return List.of(TaskResponse.TaskDto.from(task));
     }
 
     public List<TaskResponse.TaskDto> updateTaskCompletionById(UpdateTaskCompletionRequest request, Long taskId) {
 
         Task task = getTaskIfExists(taskId);
+
         task.setCompleted(request.getCompleted());
 
         this.taskRepository.saveAndFlush(task);
-        return toTaskDtoList(task);
+        return List.of(TaskResponse.TaskDto.from(task));
     }
 
     public List<TaskResponse.TaskDto> deleteTaskById(Long taskId) {
@@ -76,14 +79,7 @@ public class TaskService {
         Task task = getTaskIfExists(taskId);
 
         this.taskRepository.deleteById(task.getId());
-        return toTaskDtoList(task);
-    }
-
-    private List<TaskResponse.TaskDto> toTaskDtoList(Task task) {
-
-        List<TaskResponse.TaskDto> tasks = new ArrayList<>();
-        tasks.add(TaskResponse.TaskDto.from(task));
-        return tasks;
+        return List.of(TaskResponse.TaskDto.from(task));
     }
 
     private Task getTaskIfExists(Long taskId) {

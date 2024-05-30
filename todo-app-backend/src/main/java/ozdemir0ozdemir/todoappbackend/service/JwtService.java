@@ -10,8 +10,6 @@ import ozdemir0ozdemir.todoappbackend.configuration.JwtConfiguration;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -19,6 +17,24 @@ import java.util.function.Function;
 public class JwtService {
 
     private final JwtConfiguration jwtConfiguration;
+
+    public String generateToken(String username) {
+
+        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfiguration.getSecret()));
+
+        return Jwts.builder()
+                .subject(username)
+                .issuer("TODO-APP")
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtConfiguration.getExpiration()))
+                .signWith(secretKey, Jwts.SIG.HS256)
+                .compact();
+    }
+
+    public Boolean isTokenExpired(String token) {
+
+        return extractExpiration(token).before(new Date());
+    }
 
     public String extractUsername(String token) {
 
@@ -30,24 +46,13 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public Boolean isTokenExpired(String token) {
-
-        return extractExpiration(token).before(new Date());
-    }
-
-    public String generateToken(String username) {
-
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
-
     public Boolean validateToken(String token, String username) {
 
         String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <R> R extractClaim(String token, Function<Claims, R> claimsResolver) {
 
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -57,25 +62,13 @@ public class JwtService {
 
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfiguration.getSecret()));
 
-        return Jwts.parser().
-                verifyWith(secretKey)
+        return Jwts.parser()
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtConfiguration.getSecret()));
-
-        return Jwts.builder()
-                .claims(claims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtConfiguration.getExpiration()))
-                .signWith(secretKey, Jwts.SIG.HS256)
-                .compact();
-    }
 
 }

@@ -1,5 +1,6 @@
 package ozdemir0ozdemir.todoappbackend.exception;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -182,7 +183,6 @@ public class GlobalExceptionHandler {
         errorItems.add(
                 ErrorResponse.ErrorItem.builder()
                         .message("Username or password is not valid!")
-                        // FIXME: Omit path variable
                         .help(request.getRequestURL() + "/help")
                         .build()
         );
@@ -195,6 +195,39 @@ public class GlobalExceptionHandler {
                 .build();
 
         log.error("END :: AuthenticationException on path: {}", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+    }
+
+
+    /**
+     * Exception handler for JwtException
+     * @param ex JwtException is the exception
+     * @param request HttpServletRequest is the main request
+     * @see JwtException
+     * @see HttpServletRequest
+     * @author Özdemir Özdemir
+     * */
+    @ExceptionHandler(value = JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException ex, HttpServletRequest request) {
+
+        log.error("START :: ExpiredJwtException on path: {}", request.getRequestURI());
+        Collection<ErrorResponse.ErrorItem> errorItems = new ArrayList<>();
+
+        errorItems.add(
+                ErrorResponse.ErrorItem.builder()
+                        .message("Invalid JWT token, please provide a valid token!")
+                        .help(request.getRequestURL() + "/help")
+                        .build()
+        );
+
+        ErrorResponse response = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST)
+                .errors(errorItems)
+                .path(request.getRequestURI())
+                .build();
+
+        log.error("END :: ExpiredJwtException on path: {}", request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
 }

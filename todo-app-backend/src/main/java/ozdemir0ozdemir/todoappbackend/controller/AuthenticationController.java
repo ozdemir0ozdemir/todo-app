@@ -1,13 +1,16 @@
 package ozdemir0ozdemir.todoappbackend.controller;
 
-import lombok.*;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ozdemir0ozdemir.todoappbackend.dto.AuthenticationRequest;
 import ozdemir0ozdemir.todoappbackend.dto.JwtResponse;
 import ozdemir0ozdemir.todoappbackend.model.Member;
@@ -24,7 +27,7 @@ public final class AuthenticationController {
     private final JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<JwtResponse> getJwtToken(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<JwtResponse> getJwtToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest servletRequest) {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -32,11 +35,7 @@ public final class AuthenticationController {
                         authenticationRequest.getPassword()
                 )
         );
-
-        String path = ServletUriComponentsBuilder.fromCurrentRequest()
-                .build()
-                .toUri()
-                .getPath();
+        
 
         Member member = (Member) auth.getPrincipal();
 
@@ -44,7 +43,7 @@ public final class AuthenticationController {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK)
                 .token(jwtService.generateToken(member.getUsername()))
-                .path(path)
+                .path(servletRequest.getRequestURI())
                 .build();
 
         return ResponseEntity.ok(response);
