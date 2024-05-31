@@ -26,6 +26,16 @@ public final class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    /*
+     *  TODO: Refresh Token ?
+     *  TODO: JWT 5m-15m
+     *  TODO: Black List?
+     *  TODO: Logout - Invalidate Token
+     *
+     *  LEARN : PBAC
+     *  LEARN : JWT scope, rules
+     *
+     * */
     @PostMapping
     public ResponseEntity<JwtResponse> getJwtToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest servletRequest) {
 
@@ -35,7 +45,7 @@ public final class AuthenticationController {
                         authenticationRequest.getPassword()
                 )
         );
-        
+
 
         Member member = (Member) auth.getPrincipal();
 

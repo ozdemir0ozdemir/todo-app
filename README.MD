@@ -8,6 +8,8 @@ This is a simple RESTful API for a To-Do application backend. It provides endpoi
 - Lombok
 - Jakarta Validation API
 - H2 Database
+- JUnit
+- Mockito
 
 ## API Endpoints
 
