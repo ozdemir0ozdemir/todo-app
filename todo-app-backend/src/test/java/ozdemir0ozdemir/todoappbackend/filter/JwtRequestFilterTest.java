@@ -1,4 +1,4 @@
-package ozdemir0ozdemir.todoappbackend.filter;
+package ozdemir0ozdemir.todoappfrontend.todoappbackend.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
@@ -16,12 +16,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ozdemir0ozdemir.todoappbackend.dto.ErrorResponse;
-import ozdemir0ozdemir.todoappbackend.exception.GlobalExceptionHandler;
-import ozdemir0ozdemir.todoappbackend.model.Authority;
-import ozdemir0ozdemir.todoappbackend.model.Member;
-import ozdemir0ozdemir.todoappbackend.service.JwtService;
-import ozdemir0ozdemir.todoappbackend.service.MemberService;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.dto.ErrorResponse;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.exception.GlobalExceptionHandler;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.model.Authority;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.model.Member;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.service.JwtService;
+import ozdemir0ozdemir.todoappfrontend.todoappbackend.service.MemberService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

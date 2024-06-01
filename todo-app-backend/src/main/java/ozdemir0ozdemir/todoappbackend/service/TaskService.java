@@ -3,8 +3,6 @@ package ozdemir0ozdemir.todoappbackend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ozdemir0ozdemir.todoappbackend.dto.CreateNewTaskRequest;
 import ozdemir0ozdemir.todoappbackend.dto.TaskResponse;
@@ -14,11 +12,7 @@ import ozdemir0ozdemir.todoappbackend.exception.TaskNotFoundException;
 import ozdemir0ozdemir.todoappbackend.model.Task;
 import ozdemir0ozdemir.todoappbackend.repository.TaskRepository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

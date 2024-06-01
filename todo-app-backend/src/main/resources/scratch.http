@@ -8,7 +8,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNjY1N
 }
 
 ### Get All Tasks
-GET http://localhost:8080/tasks?pageNumber=0&pageSize=5
+GET https://localhost:8080/tasks?pageNumber=0&pageSize=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3MTcxMDAyLCJleHAiOjE3MTcxNzIyMDJ9.EQ5m00VNkHzoJLLsiigQeBS5OwiM4g-yu8e8eg7cYLg
 
 ### Get a Task by Id
 GET http://localhost:8080/tasks/1

@@ -27,10 +27,12 @@ public final class AuthenticationController {
     private final JwtService jwtService;
 
     /*
-     *  TODO: Refresh Token ?
-     *  TODO: JWT 5m-15m
-     *  TODO: Black List?
-     *  TODO: Logout - Invalidate Token
+     *  TODO: Refreshing token by using special endpoint
+     *  TODO: Access token expires about 5-15 minutes
+     *  TODO: Refresh token expires in 15 days
+     *  TODO: Logout triggers revoke token
+     *  TODO: Revoke token by expiration
+     *  TODO: Log to token creation and usage for fraud detection
      *
      *  LEARN : PBAC
      *  LEARN : JWT scope, rules

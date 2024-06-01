@@ -9,9 +9,12 @@
 
   <name>todo-app</name>
   <url>https://github.com/ozdemir0ozdemir/todo-app</url>
+	<modules>
+		<module>todo-app-frontend</module>
+	</modules>
 
 
-  <properties>
+	<properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -26,28 +29,6 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>${io.jsonwebtoken.jjwt.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>${io.jsonwebtoken.jjwt.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>${io.jsonwebtoken.jjwt.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

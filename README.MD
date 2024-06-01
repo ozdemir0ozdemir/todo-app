@@ -5,6 +5,9 @@ This is a simple RESTful API for a To-Do application backend. It provides endpoi
 
 ## Technologies Used
 - Spring Boot
+- Spring Boot Data JPA
+- Spring Boot Security
+- JWT
 - Lombok
 - Jakarta Validation API
 - H2 Database
