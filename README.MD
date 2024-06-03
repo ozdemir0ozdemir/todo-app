@@ -13,6 +13,7 @@ This is a simple RESTful API for a To-Do application backend. It provides endpoi
 - H2 Database
 - JUnit
 - Mockito
+- Thymeleaf
 
 ## API Endpoints
 

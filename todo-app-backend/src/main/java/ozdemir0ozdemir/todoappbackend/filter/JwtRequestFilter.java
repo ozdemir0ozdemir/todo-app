@@ -61,7 +61,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            Member member = (Member) this.memberService.loadUserByUsername(username);
+            Member member = this.memberService.loadUserByUsername(username);
             var authToken = new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);

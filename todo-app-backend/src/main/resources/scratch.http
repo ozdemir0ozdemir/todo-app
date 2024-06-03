@@ -1,15 +1,15 @@
 ### Create New Task
 POST http://localhost:8080/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNjY1NjUyNiwiZXhwIjoxNzE2NjU3NzI2fQ.gwCKeI14E8NIFYtYJ_IETujZ2n8X4xRJCSev273hQao
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3NDEyNzI3LCJleHAiOjE3MTc0MTM5Mjd9.xbiKGquOgnywtPT9ulEO2QDUCfYHv0Ou4fNUULigKJs
 
 {
   "title": "Bu bir yapılacak maddesidir!"
 }
 
 ### Get All Tasks
-GET https://localhost:8080/tasks?pageNumber=0&pageSize=5
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3MTcxMDAyLCJleHAiOjE3MTcxNzIyMDJ9.EQ5m00VNkHzoJLLsiigQeBS5OwiM4g-yu8e8eg7cYLg
+GET http://localhost:8080/tasks?pageNumber=0&pageSize=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3NDEyNzI3LCJleHAiOjE3MTc0MTM5Mjd9.xbiKGquOgnywtPT9ulEO2QDUCfYHv0Ou4fNUULigKJs
 
 ### Get a Task by Id
 GET http://localhost:8080/tasks/1
@@ -43,3 +43,7 @@ Content-Type: application/json
   "username": "admin",
   "password": "password"
 }
+
+### Me
+GET http://localhost:8080/authentication/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3NDEyNzI3LCJleHAiOjE3MTc0MTM5Mjd9.xbiKGquOgnywtPT9ulEO2QDUCfYHv0Ou4fNUULigKJs

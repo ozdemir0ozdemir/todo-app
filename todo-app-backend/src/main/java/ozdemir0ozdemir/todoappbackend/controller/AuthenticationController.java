@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 import ozdemir0ozdemir.todoappbackend.dto.AuthenticationRequest;
 import ozdemir0ozdemir.todoappbackend.dto.JwtResponse;
+import ozdemir0ozdemir.todoappbackend.dto.MeResponse;
 import ozdemir0ozdemir.todoappbackend.model.Member;
 import ozdemir0ozdemir.todoappbackend.service.JwtService;
+import ozdemir0ozdemir.todoappbackend.service.MemberService;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +25,7 @@ public final class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final MemberService memberService;
 
     /*
      *  TODO: Refreshing token by using special endpoint
@@ -48,7 +49,6 @@ public final class AuthenticationController {
                 )
         );
 
-
         Member member = (Member) auth.getPrincipal();
 
         JwtResponse response = JwtResponse.builder()
@@ -56,9 +56,31 @@ public final class AuthenticationController {
                 .status(HttpStatus.OK)
                 .token(jwtService.generateToken(member.getUsername()))
                 .path(servletRequest.getRequestURI())
+                .authorities(member.getAuthorities())
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    // TODO: even bearer token responses forbidden when authenticated() in security config
+    @GetMapping("/me")
+    public ResponseEntity<MeResponse> getMe(HttpServletRequest servletRequest) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        String jwt = servletRequest.getHeader("Authorization").substring(7);
+        String username = jwtService.extractUsername(jwt);
+        Member member = memberService.loadUserByUsername(username);
+
+
+        return ResponseEntity.ok(
+                MeResponse.builder()
+                        .username(username)
+                        .token(jwt)
+                        .authorities(member.getAuthorities())
+                        .build()
+        );
     }
 
 }

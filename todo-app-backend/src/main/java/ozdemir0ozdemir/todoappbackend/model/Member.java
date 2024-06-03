@@ -58,7 +58,7 @@ public class Member implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public List<Authority> getAuthorities() {
         return this.authorities;
     }
 

@@ -4,23 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtResponse {
+public class MeResponse {
 
-    private LocalDateTime timestamp;
-    private HttpStatus status;
+    private String username;
     private String token;
     private List<AuthorityDto> authorities;
-    private String path;
-
-
-
 }
