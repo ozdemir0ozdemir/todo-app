@@ -19,7 +19,6 @@ import ozdemir0ozdemir.todoappbackend.service.MemberService;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/authentication")
 @RequiredArgsConstructor
 public final class AuthenticationController {
 
@@ -39,7 +38,7 @@ public final class AuthenticationController {
      *  LEARN : JWT scope, rules
      *
      * */
-    @PostMapping
+    @PostMapping("/authentication")
     public ResponseEntity<JwtResponse> getJwtToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest servletRequest) {
 
         Authentication auth = authenticationManager.authenticate(

@@ -6,15 +6,24 @@
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 </head>
 <body>
+
 <div th:object="${auth}" class="container">
-	<b>
-	<p th:text="'Name : ' + *{name}"></p>
-	<p th:text="'Authenticated : ' + *{authenticated}"></p>
-	<p th:text="'Authorities : ' + *{authorities}"></p>
-	<p th:text="'Credentials : ' + *{credentials}"></p>
-	<p th:text="'Details : ' + *{details}"></p>
-	<p th:text="'Principal : ' + *{principal}"></p>
-	</b>
+	<h1>ME PAGE</h1>
+	</br>
+	</br>
+	<b><p th:text="'Username : ' "></p></b>
+	<p th:text="*{name}"></p>
+
+	<b><p th:text="'Authorities :'"></p></b>
+	<ul>
+		<li th:text="${authority.authority}" th:each="authority : *{authorities}"></li>
+	</ul>
+
+	<b><p th:text="'JWT Token : '"></p></b>
+	<p th:text="*{credentials}"></p>
+
+
+
 </div>
 </body>
 </html>

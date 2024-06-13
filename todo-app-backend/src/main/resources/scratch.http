@@ -1,15 +1,15 @@
 ### Create New Task
 POST http://localhost:8080/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3NDEyNzI3LCJleHAiOjE3MTc0MTM5Mjd9.xbiKGquOgnywtPT9ulEO2QDUCfYHv0Ou4fNUULigKJs
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE4Mjc5Nzk5LCJleHAiOjE3MTgyODA5OTl9.9lS3MfYwT3jaZl5aP1y8plFpwj9nVrIMD_fyZP9wrYY
 
 {
-  "title": "Bu bir yapılacak maddesidir!"
+  "title": "Bu bir yapılacak maddesidir! 10"
 }
 
 ### Get All Tasks
-GET http://localhost:8080/tasks?pageNumber=0&pageSize=5
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE3NDEyNzI3LCJleHAiOjE3MTc0MTM5Mjd9.xbiKGquOgnywtPT9ulEO2QDUCfYHv0Ou4fNUULigKJs
+GET http://localhost:8080/tasks?pageNumber=2&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE4Mjc0NzcyLCJleHAiOjE3MTgyNzU5NzJ9.QvngHPvJiQ2FwNCSYhLpvHo1ZNihMwIw1Wx_HcZw6Bk
 
 ### Get a Task by Id
 GET http://localhost:8080/tasks/1
@@ -25,11 +25,12 @@ Content-Type: application/json
 }
 
 ### Patch a task's completed value usin UpdateTaskCompletionRequest as the body
-PATCH http://localhost:8080/tasks/1
+PATCH http://localhost:8080/tasks/4
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6IlRPRE8tQVBQIiwiaWF0IjoxNzE4Mjc0NzcyLCJleHAiOjE3MTgyNzU5NzJ9.QvngHPvJiQ2FwNCSYhLpvHo1ZNihMwIw1Wx_HcZw6Bk
 
 {
-  "completed": false
+  "completed": true
 }
 
 ### Delete a task by id

@@ -1,15 +1,27 @@
 package ozdemir0ozdemir.todoappfrontend.configuration;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import ozdemir0ozdemir.todoappfrontend.exception.RestErrorHandler;
 
-@Controller
+
+@Configuration
+@RequiredArgsConstructor
 public class RestTemplateConfiguration {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplateBuilder().build();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new RestErrorHandler(objectMapper));
+
+
+        return restTemplate;
     }
+
+
 }

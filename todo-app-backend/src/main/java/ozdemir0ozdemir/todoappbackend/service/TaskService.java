@@ -3,6 +3,7 @@ package ozdemir0ozdemir.todoappbackend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ozdemir0ozdemir.todoappbackend.dto.CreateNewTaskRequest;
 import ozdemir0ozdemir.todoappbackend.dto.TaskResponse;
@@ -34,7 +35,8 @@ public class TaskService {
 
     public Page<TaskResponse.TaskDto> findAllTasks(int pageNumber, int pageSize) {
 
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize).withSort(Sort.Direction.DESC, "id");
+
         Page<Task> tasks = this.taskRepository.findAll(pageRequest);
 
         return tasks.map(TaskResponse.TaskDto::from);

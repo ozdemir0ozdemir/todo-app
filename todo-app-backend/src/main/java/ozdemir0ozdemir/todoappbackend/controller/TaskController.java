@@ -95,7 +95,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{taskId}")
+    @PostMapping("/status/{taskId}")
     public ResponseEntity<TaskResponse> updateTaskCompletionById(@Valid
                                                                  @RequestBody UpdateTaskCompletionRequest request,
                                                                  @Min(value = 1, message = "Task id cannot be negative!")
